@@ -71,11 +71,9 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         
         let center = UNUserNotificationCenter.current()
         
-               // 通知の使用許可をリクエスト
-               center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
-               }
-        
-        
+        // 通知の使用許可をリクエスト
+        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+        }
     }
     
     @objc func getTime() {
@@ -89,7 +87,7 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         
         //保存している、前回アプリを閉じたときの時刻。
         let strDate  = userDefaults.object(forKey: "strDate")
-
+        
         
         //  var date = nowDate.timeIntervalSince(restartDate!)
         
@@ -103,47 +101,54 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
             print("データあったよ！")
             print("閉じている時間",timeDiff)
             
-            
-            
         } else {
             print("データない！！")
         }
         print("カウント",count)
         count += Float(timeDiff)
         print("カウント2",count)
+        
+        let date = Date()
+        let date2 = Date(timeInterval: TimeInterval(hour + minuts + seconds), since: date)
+        let targetDate = Calendar.current.dateComponents(
+            [.year, .month, .day, .hour, .minute],
+            from: date2)
+        let trigger = UNCalendarNotificationTrigger.init(dateMatching: targetDate, repeats: false)
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        let userDefaults = UserDefaults.standard
-//        let nowDate: Date = Date()
-//
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//
-//        //保存している、前回アプリを閉じたときの時刻。
-//        let strDate  = userDefaults.object(forKey: "strDate")
-//        print("現在時間", nowDate)
-//        print("今の時間",strDate)
-//        //ただの今の時間
-//        let restartDate = formatter.date(from: "strDate")
-//        print("こんにちは：", restartDate)
-//        //  var date = nowDate.timeIntervalSince(restartDate!)
-//
-//
-//        //ここで差分を計算！
-//
-//        if let strDateAru = strDate {
-//
-//            var timeDiff = nowDate.timeIntervalSince(strDateAru as! Date)
-//            print("データあったよ！")
-//        } else {
-//            print("データない！！")
-//        }
-//
+        //        let userDefaults = UserDefaults.standard
+        //        let nowDate: Date = Date()
+        //
+        //        let formatter = DateFormatter()
+        //        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        //
+        //        //保存している、前回アプリを閉じたときの時刻。
+        //        let strDate  = userDefaults.object(forKey: "strDate")
+        //        print("現在時間", nowDate)
+        //        print("今の時間",strDate)
+        //        //ただの今の時間
+        //        let restartDate = formatter.date(from: "strDate")
+        //        print("こんにちは：", restartDate)
+        //        //  var date = nowDate.timeIntervalSince(restartDate!)
+        //
+        //
+        //        //ここで差分を計算！
+        //
+        //        if let strDateAru = strDate {
+        //
+        //            var timeDiff = nowDate.timeIntervalSince(strDateAru as! Date)
+        //            print("データあったよ！")
+        //        } else {
+        //            print("データない！！")
+        //        }
+        //
         
         navigationController?.isNavigationBarHidden = true
-    
+        
         
         
     }
@@ -151,7 +156,7 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
     
     
     override func viewDidDisappear(_ animated: Bool) {
-
+        
         
         navigationController?.isNavigationBarHidden = false
     }
@@ -243,7 +248,7 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
             
         }
         
-
+        
     }
     
     
@@ -565,5 +570,7 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
             center.delegate = UserNotificationUtil.shared
         }
     }
+    
+    
     
 }
