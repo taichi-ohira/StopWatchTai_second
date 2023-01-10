@@ -1,0 +1,61 @@
+# 無効にするルール
+disabled_rules:
+    - for_where
+    - force_cast
+    - force_try
+    - shorthand_operator
+    # 一旦多いので無効にするが、自動生成コード以外では徹底したい
+    - vertical_whitespace
+    - trailing_whitespace
+    - trailing_newline
+    - unused_optional_binding # for SceneDelegate
+
+# デフォルト無効で有効化するルール
+opt_in_rules:
+    - attributes
+    - collection_alignment
+    # - conditional_returns_on_newline
+    - empty_collection_literal
+    - empty_count
+    - file_name_no_space
+    - identical_operands
+    - indentation_width
+    - legacy_random
+    - literal_expression_end_indentation
+    - modifier_order
+    - operator_usage_whitespace
+    - overridden_super_call
+    - strong_iboutlet
+    - toggle_bool
+    - yoda_condition
+    # こっから下は検討
+    - closure_body_length
+    - closure_end_indentation
+    - closure_spacing
+    # - explicit_type_interface
+    # - sorted_imports
+
+attributes:
+    always_on_same_line: ["@objc", "@IBAction", "@NSManaged"]
+
+indentation_width:
+    include_comments: false
+
+identifier_name:
+    min_length: 1
+
+line_length:
+    - 200
+    - 500
+
+file_length:
+    - 800
+    - 1600
+
+function_body_length:
+    - 100
+    - 200
+
+excluded:
+    - "**/Pods/"
+    - "**/Carthage/"
