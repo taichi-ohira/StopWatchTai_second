@@ -45,6 +45,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let strDate = formatter.date(from: "nowDate") // 2020-05-04 11:16:31
         userDefaults.set(nowDate, forKey: "strDate")
         print("🕞:", userDefaults.object(forKey: "strDate"))
+        
+        let content = UNMutableNotificationContent()
+                content.title = "タイマー"
+                content.body = "時間になりました"
+                content.sound = UNNotificationSound.default
+        
+
+        let trigger = UNCalendarNotificationTrigger.init(dateMatching: userDefaults.object(forKey: "targetDate") as! DateComponents, repeats: false)
+        let request = UNNotificationRequest(identifier: "Time Interval",
+                                                             content: content,
+                                                             trigger: trigger)
+        // 通知の登録
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
 	}
 
 	func sceneWillEnterForeground(_ scene: UIScene) {

@@ -108,14 +108,18 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         count += Float(timeDiff)
         print("カウント2",count)
         
+        let dateFormatter = DateFormatter()
         let date = Date()
         let date2 = Date(timeInterval: TimeInterval(hour + minuts + seconds), since: date)
         let targetDate = Calendar.current.dateComponents(
             [.year, .month, .day, .hour, .minute],
             from: date2)
-        let trigger = UNCalendarNotificationTrigger.init(dateMatching: targetDate, repeats: false)
         
+        userDefaults.set(targetDate, forKey: "targetDate")
         
+        let dateString = dateFormatter.string(from: date2)
+              print(dateString)
+       
     }
     
     override func viewWillAppear(_ animated: Bool) {
