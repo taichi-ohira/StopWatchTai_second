@@ -34,30 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		// Called when the scene will move from an active state to an inactive state.
 		// This may occur due to temporary interruptions (ex. an incoming phone call).
         
-        //現在時刻取得
-        let userDefaults = UserDefaults.standard
-        let nowDate: Date = Date()
-        
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        
-        let strDate = formatter.date(from: "nowDate") // 2020-05-04 11:16:31
-        userDefaults.set(nowDate, forKey: "strDate")
-        print("🕞:", userDefaults.object(forKey: "strDate"))
-        
-        let content = UNMutableNotificationContent()
-                content.title = "タイマー"
-                content.body = "時間になりました"
-                content.sound = UNNotificationSound.default
-        
 
-        let trigger = UNCalendarNotificationTrigger.init(dateMatching: userDefaults.object(forKey: "targetDate") as! DateComponents, repeats: false)
-        let request = UNNotificationRequest(identifier: "Time Interval",
-                                                             content: content,
-                                                             trigger: trigger)
-        // 通知の登録
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
         
 	}
 
@@ -66,6 +43,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		// Use this method to undo the changes made on entering the background.
         
         NotificationCenter.default.post(name: Notification.Name(rawValue: "TestNotification"), object: nil)
+        
+        
         print("アプリを開いた時に呼ばれる")
 	}
 
@@ -73,6 +52,40 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		// Called as the scene transitions from the foreground to the background.
 		// Use this method to save data, release shared resources, and store enough scene-specific state information
 		// to restore the scene back to its current state.
+        //1.現在時刻を取得する
+        //2.通知する時間(targettime)を呼び出す
+        //3.ユーザーが設定した時間の通知をする
+        
+        //現在時刻取得
+        let userDefaults = UserDefaults.standard
+        let nowDate: Date = Date()
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        var targettime =  userDefaults.object(forKey: "targetDate") as! Date
+//        let strDate = formatter.date(from: targettime) // 2020-05-04 11:16:31
+        print("🕞:", targettime)
+        
+        let content = UNMutableNotificationContent()
+                content.title = "タイマー"
+                content.body = "時間になりました"
+                content.sound = UNNotificationSound.default
+        
+
+//        print(userDefaults.object(forKey: "targetDate"))
+        
+        let targetDateComponent = Calendar.current.dateComponents(
+            [.year, .month, .day, .hour, .minute],
+     from: targettime)
+
+        let trigger = UNCalendarNotificationTrigger.init(dateMatching:targetDateComponent , repeats: false)
+        let request = UNNotificationRequest(identifier: "Time Interval",
+                                                             content: content,
+                                                             trigger: trigger)
+        // 通知の登録
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        
 	}
     
     

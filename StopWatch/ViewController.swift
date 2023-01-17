@@ -12,7 +12,6 @@ import UserNotifications
 
 class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource  {
     
-    
     //時分秒のデータ
     let dataList = [[Int](0...23), [Int](0...59), [Int](0...59)]
     var timer = Timer()
@@ -67,7 +66,7 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         testPickerView.dataSource = self
         
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getTime), name: Notification.Name(rawValue: "TestNotification"), object: nil)
+        //NotificationCenter.default.addObserver(self, selector: #selector(self.getTime), name: Notification.Name(rawValue: "TestNotification"), object: nil)
         
         let center = UNUserNotificationCenter.current()
         
@@ -76,7 +75,9 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         }
     }
     
-    @objc func getTime() {
+    
+    //これはがアプリが再開した時にアプリを閉じていた時間の分だけ経っているようにしたり、通知したい時間を保存したりするメソッド
+    func getTime() {
         var timeDiff: Double!
         
         let userDefaults = UserDefaults.standard
@@ -86,8 +87,8 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
         //保存している、前回アプリを閉じたときの時刻。
+        //前回アプリを閉じた時の時刻をを保存する
         let strDate  = userDefaults.object(forKey: "strDate")
-        
         
         //  var date = nowDate.timeIntervalSince(restartDate!)
         
@@ -107,16 +108,17 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         print("カウント",count)
         count += Float(timeDiff)
         print("カウント2",count)
-        
+        //通知したい時間を保存する
         let dateFormatter = DateFormatter()
         let date = Date()
-        let date2 = Date(timeInterval: TimeInterval(hour + minuts + seconds), since: date)
-        let targetDate = Calendar.current.dateComponents(
-            [.year, .month, .day, .hour, .minute],
-            from: date2)
-        
-        userDefaults.set(targetDate, forKey: "targetDate")
+        let date2 = Date(timeInterval: TimeInterval(hour + minuts + seconds), since: date) // 通知したい時間
+        print(date2)
+//        let targetDate = Calendar.current.dateComponents(
+//            [.year, .month, .day, .hour, .minute],
+//            from: date2)
+        userDefaults.set(date2, forKey: "targetDate")
     
+        
         
         let dateString = dateFormatter.string(from: date2)
               print(dateString)
@@ -250,10 +252,7 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
                 userInfo: nil,
                 repeats: true
             )
-            
         }
-        
-        
     }
     
     
@@ -314,6 +313,8 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         if count >= 5.0 {
             timeCheck = false
         }
+        
+        print(count)
         // ラベルに小数点以下2桁まで表示
         label.text = String(format:"\(Int(count)/3600)時間\((Int(count)%3600)/60)分\(Int(count)%60)秒")
         print("count1: ", count)
@@ -429,6 +430,7 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
             print("ok")
         }
         
+        getTime()
         
         
         
