@@ -58,6 +58,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                                                              trigger: trigger)
         // 通知の登録
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        
 	}
 
 	func sceneWillEnterForeground(_ scene: UIScene) {
