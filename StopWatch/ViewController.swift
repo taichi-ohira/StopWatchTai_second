@@ -307,6 +307,7 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
     
     
     
+    
     @objc func up() {
         // countを0.01足す
         count = count + 1
