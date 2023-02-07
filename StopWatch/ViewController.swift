@@ -19,6 +19,8 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
     var minuts: Float = 0.0
     var seconds: Float = 0.0
     
+    
+    
     var timeCheck:Bool = false
     
     override func viewDidLoad() {
