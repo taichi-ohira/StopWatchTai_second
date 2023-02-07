@@ -62,30 +62,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        userDefaults.set(nowDate, forKey: "appclosedtime")
         
-        var targettime =  userDefaults.object(forKey: "targetDate") as! Date
-//        let strDate = formatter.date(from: targettime) // 2020-05-04 11:16:31
-        print("🕞:", targettime)
-        
-        let content = UNMutableNotificationContent()
-                content.title = "タイマー"
-                content.body = "時間になりました"
-                content.sound = UNNotificationSound.default
-        
-
-//        print(userDefaults.object(forKey: "targetDate"))
-        
-        let targetDateComponent = Calendar.current.dateComponents(
-            [.year, .month, .day, .hour, .minute],
-     from: targettime)
-
-        let trigger = UNCalendarNotificationTrigger.init(dateMatching:targetDateComponent , repeats: false)
-        let request = UNNotificationRequest(identifier: "Time Interval",
-                                                             content: content,
-                                                             trigger: trigger)
-        // 通知の登録
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        
+     
 	}
     
     

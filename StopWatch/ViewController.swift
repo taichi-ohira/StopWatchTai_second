@@ -19,6 +19,8 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
     var minuts: Float = 0.0
     var seconds: Float = 0.0
     
+    let userDefaults = UserDefaults.standard
+    
     
     
     var timeCheck:Bool = false
@@ -82,34 +84,34 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
     func getTime() {
         var timeDiff: Double!
         
-        let userDefaults = UserDefaults.standard
+        
         let nowDate: Date = Date()
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
         //保存している、前回アプリを閉じたときの時刻。
-        //前回アプリを閉じた時の時刻をを保存する
-        let strDate  = userDefaults.object(forKey: "strDate")
+        //前回アプリを閉じた時の時刻を取ってくる
+        let strDate  = userDefaults.object(forKey: "appclosedtime")
+    
         
         //  var date = nowDate.timeIntervalSince(restartDate!)
         
         
         //ここで差分を計算！
         
+        //if let の中身は、倉庫に値がある時。
         if let strDateAru = strDate {
             print("閉じた時刻",strDateAru)
             print("今の時間",nowDate)
             timeDiff = nowDate.timeIntervalSince(strDateAru as! Date)
             print("データあったよ！")
             print("閉じている時間",timeDiff)
-            
+            count += Float(timeDiff)
+            userDefaults.removeObject(forKey: "appclosedtime")
         } else {
             print("データない！！")
         }
-        print("カウント",count)
-        count += Float(timeDiff)
-        print("カウント2",count)
         //通知したい時間を保存する
         let dateFormatter = DateFormatter()
         let date = Date()
@@ -129,37 +131,7 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //        let userDefaults = UserDefaults.standard
-        //        let nowDate: Date = Date()
-        //
-        //        let formatter = DateFormatter()
-        //        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        //
-        //        //保存している、前回アプリを閉じたときの時刻。
-        //        let strDate  = userDefaults.object(forKey: "strDate")
-        //        print("現在時間", nowDate)
-        //        print("今の時間",strDate)
-        //        //ただの今の時間
-        //        let restartDate = formatter.date(from: "strDate")
-        //        print("こんにちは：", restartDate)
-        //        //  var date = nowDate.timeIntervalSince(restartDate!)
-        //
-        //
-        //        //ここで差分を計算！
-        //
-        //        if let strDateAru = strDate {
-        //
-        //            var timeDiff = nowDate.timeIntervalSince(strDateAru as! Date)
-        //            print("データあったよ！")
-        //        } else {
-        //            print("データない！！")
-        //        }
-        //
-        
         navigationController?.isNavigationBarHidden = true
-        
-        
-        
     }
     
     
@@ -246,6 +218,35 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
     
     @IBAction func start() {
         if !timer.isValid {
+            userDefaults.removeObject(forKey: "appclosedtime")
+            var targetDate: Date!
+            var nowData: Date = Date()
+         //   targetDate = nowData +
+            
+            var targettime =  userDefaults.object(forKey: "targetDate") as! Date
+    //        let strDate = formatter.date(from: targettime) // 2020-05-04 11:16:31
+            print("🕞:", targettime)
+            
+            let content = UNMutableNotificationContent()
+                    content.title = "タイマー"
+                    content.body = "時間になりました"
+                    content.sound = UNNotificationSound.default
+            
+
+    //        print(userDefaults.object(forKey: "targetDate"))
+            
+            let targetDateComponent = Calendar.current.dateComponents(
+                [.year, .month, .day, .hour, .minute],
+         from: targettime)
+
+            let trigger = UNCalendarNotificationTrigger.init(dateMatching:targetDateComponent , repeats: false)
+            let request = UNNotificationRequest(identifier: "Time Interval",
+                                                                 content: content,
+                                                                 trigger: trigger)
+            // 通知の登録
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            
+            
             // タイマーが動作していなかったら動かす
             timer = Timer.scheduledTimer(
                 timeInterval: 1,
@@ -303,7 +304,6 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
     }
     
     @IBAction func rireki() {
-        //        self.performSegue(withIdentifier: "toRecord", sender: nil)
         self.performSegue(withIdentifier: "toSecondViewController1", sender: nil)
     }
     
@@ -434,10 +434,6 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         }
         
         getTime()
-        
-        
-        
-        
     }
     
     
@@ -468,13 +464,13 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         
     }
     
-    
     //データを返すメソッド
     func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView
     {
         let pickerLabel = UILabel()
         pickerLabel.textAlignment = NSTextAlignment.left
         pickerLabel.text = String(dataList[component][row])
+        print(dataList[component][row])
         return pickerLabel
         
     }
@@ -547,7 +543,6 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         return nil
     }
     
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toSecondViewController1" {
             let nextVC = segue.destination as! SecondViewController1
@@ -580,8 +575,4 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
             center.delegate = UserNotificationUtil.shared
         }
     }
-    
-    
-    
-    
 }
