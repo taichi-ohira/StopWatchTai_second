@@ -63,12 +63,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         userDefaults.set(nowDate, forKey: "appclosedtime")
-        
-     
 	}
-    
-    
-
-
 }
 

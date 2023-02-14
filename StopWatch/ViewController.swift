@@ -216,17 +216,34 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         }
     }
     
+    
+    //タイマーの表示をスタート
+    //指定した時間をUserDefaultに保存（targetDate）
+    //指定した時間の通知の設定
+
     @IBAction func start() {
+        //
         if !timer.isValid {
             userDefaults.removeObject(forKey: "appclosedtime")
+            
+            //
             var targetDate: Date!
             var nowData: Date = Date()
-         //   targetDate = nowData +
             
-            var targettime =  userDefaults.object(forKey: "targetDate") as! Date
+            print("111" ,hour + minuts + seconds)
+            var plusTime = hour + minuts + seconds
+            
+            targetDate = nowData + TimeInterval(plusTime) //通知する時間(秒)
+            
+            userDefaults.set(targetDate, forKey: "targetDate")
+    
+            
+//            var targettime =  userDefaults.object(forKey: "targetDate") as! Date
     //        let strDate = formatter.date(from: targettime) // 2020-05-04 11:16:31
-            print("🕞:", targettime)
+            print("🕞:", targetDate)
             
+            
+            //MARK: 通知の設定
             let content = UNMutableNotificationContent()
                     content.title = "タイマー"
                     content.body = "時間になりました"
@@ -237,7 +254,7 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
             
             let targetDateComponent = Calendar.current.dateComponents(
                 [.year, .month, .day, .hour, .minute],
-         from: targettime)
+         from: targetDate)
 
             let trigger = UNCalendarNotificationTrigger.init(dateMatching:targetDateComponent , repeats: false)
             let request = UNNotificationRequest(identifier: "Time Interval",
@@ -326,7 +343,6 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         if count >= 0 && count<=hour + minuts + seconds {
             testProgressView.setProgress(testProgressView.progress + hour + minuts + seconds, animated: true)
         }
-        
         
         
         if fivemode {
